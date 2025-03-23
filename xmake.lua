@@ -1,0 +1,34 @@
+add_rules(
+	"mode.debug",
+	"mode.release",
+	"plugin.vsxmake.autoupdate"
+)
+
+set_project("catrescue")
+set_version("0.0.0", { build = "%Y%m%d%H%M%S" })
+
+set_languages("gnuxx20")
+set_warnings("all")
+
+add_includedirs("$(scriptdir)")
+add_defines("GAME_NAME=\"Cat Rescue\"", "_CRT_SECURE_NO_WARNINGS")
+
+add_requires("flecs")
+add_requires("glad")
+add_requires("glm")
+add_requires("libsdl3")
+add_requires("stb")
+
+target("catrescue")
+	add_headerfiles("game/**.h", "assets/shaders/**")
+	add_files("game/**.cpp")
+
+	after_build(function (target)
+		if not os.exists(path.join(target:targetdir(), "assets")) then
+			os.ln("$(scriptdir)/assets", path.join(target:targetdir(), "assets"))
+		end
+	end)
+
+	add_packages("flecs", "glad", "glm", "libsdl3", "stb")
+target_end()
+
