@@ -21,20 +21,20 @@ SDL_Storage* OpenStorage(void)
     return storage;
 }
 
-u8 *Read(SDL_Storage* storage, cstr path, u64 *size)
+u8 *Read(SDL_Storage* storage, cstr path, u64& size)
 {
-    if (!SDL_GetStorageFileSize(storage, path, size) || *size < 1)
+    if (!SDL_GetStorageFileSize(storage, path, &size) || size < 1)
     {
         Error("failed to read file %s or it was empty: %s", path, SDL_GetError());
     }
 
-    u8 *data = new u8[*size];
+    u8 *data = new u8[size];
     if (!data)
     {
         Error("failed to allocate memory for file %s", path);
     }
 
-    if (!SDL_ReadStorageFile(storage, path, data, *size))
+    if (!SDL_ReadStorageFile(storage, path, data, size))
     {
         Error("failed to read file %s: %s", path, SDL_GetError());
     }

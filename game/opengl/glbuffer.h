@@ -7,39 +7,49 @@
 class CGLBuffer: public CBaseGLObject
 {
   public:
-    virtual ~CGLBuffer()
-    {
-		glDeleteBuffers(1, &m_handle);
-    }
+	CGLBuffer() : CBaseGLObject()
+	{
+	}
+	virtual ~CGLBuffer()
+	{
+        if (IsGood())
+        {
+		    glDeleteBuffers(1, &m_handle);
+            m_handle = GL_INVALID_VALUE;
+        }
+	}
 
 	virtual void Bind() const
 	{
 		glBindBuffer(m_type, m_handle);
 	}
 
-	virtual void Unbind() const
+  protected:
+	GLenum m_usage;
+	GLenum m_type;
+
+	CGLBuffer(GLenum usage, GLenum type) : m_usage(usage), m_type(type)
 	{
-		glBindBuffer(m_type, 0);
 	}
 
-  protected:
-    GLenum m_usage;
-    GLenum m_type;
-
-    CGLBuffer(GLenum usage, GLenum type) : m_usage(usage), m_type(type) {}
-
-    void Upload(const void* data, ssize size) const;
+	void Upload(const void* data, ssize size) const;
 };
 
 class CGLVertexBuffer: public CGLBuffer
 {
   public:
+	CGLVertexBuffer() : CGLBuffer()
+	{
+	}
 	CGLVertexBuffer(const Vertex_t* vertices, u32 vertexCount);
 };
 
 class CGLIndexBuffer: public CGLBuffer
 {
   public:
+	CGLIndexBuffer() : CGLBuffer()
+	{
+	}
 	CGLIndexBuffer(const Index_t* indices, u32 indexCount);
 
 	u32 GetIndexCount() const
@@ -54,10 +64,17 @@ class CGLIndexBuffer: public CGLBuffer
 class CGLVertexArray: public CBaseGLObject
 {
   public:
+	CGLVertexArray() : CBaseGLObject()
+	{
+	}
 	CGLVertexArray(const CGLVertexBuffer& vertexBuffer, const CGLIndexBuffer& indexBuffer);
 	~CGLVertexArray()
 	{
-		glDeleteVertexArrays(1, &m_handle);
+		if (IsGood())
+		{
+			glDeleteVertexArrays(1, &m_handle);
+            m_handle = GL_INVALID_VALUE;
+		}
 	}
 
 	virtual void Bind() const
@@ -65,7 +82,7 @@ class CGLVertexArray: public CBaseGLObject
 		glBindVertexArray(m_handle);
 	}
 
-	virtual void Unbind() const
+	void Unbind() const
 	{
 		glBindVertexArray(0);
 	}

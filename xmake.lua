@@ -13,10 +13,19 @@ set_warnings("all")
 add_includedirs("$(scriptdir)")
 add_defines("GAME_NAME=\"Cat Rescue\"", "_CRT_SECURE_NO_WARNINGS")
 
+if is_mode("debug") then
+	add_defines("GAME_DEBUG")
+else
+	add_defines("GAME_RELEASE")
+end
+
+add_requires("assimp")
 add_requires("flecs")
 add_requires("glad")
 add_requires("glm")
+add_requires("joltphysics")
 add_requires("libsdl3")
+add_requires("qoi")
 add_requires("stb")
 
 target("catrescue")
@@ -29,6 +38,6 @@ target("catrescue")
 		end
 	end)
 
-	add_packages("flecs", "glad", "glm", "libsdl3", "stb")
+	add_packages("assimp", "flecs", "glad", "glm", "joltphysics", "libsdl3", "qoi", "stb")
 target_end()
 

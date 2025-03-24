@@ -9,10 +9,13 @@ CWindow::CWindow(cstr title, u32 width, u32 height) : m_handle(nullptr), m_open(
 
 	// 4.2 is the highest that Gallium or whatever supports
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, true);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, true);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#ifdef GAME_DEBUG
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif
 
 	m_handle =
 		SDL_CreateWindow(title, m_width, m_height, SDL_WINDOW_OPENGL | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE);

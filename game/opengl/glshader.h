@@ -1,25 +1,27 @@
 #pragma once
 
 #include "game/game.h"
+#include "game/log.h"
 #include "opengl.h"
 
 class CGLShaderProgram: public CBaseGLObject
 {
   public:
 	CGLShaderProgram(SDL_Storage* storage, cstr vertexName, cstr fragmentName);
+    CGLShaderProgram(const CGLShaderProgram& other) : CBaseGLObject(other) {}
+
 	~CGLShaderProgram()
 	{
-		glDeleteProgram(m_handle);
+        if (IsGood())
+        {
+		    glDeleteProgram(m_handle);
+            m_handle = GL_INVALID_VALUE;
+        }
 	}
 
 	virtual void Bind() const
 	{
 		glUseProgram(m_handle);
-	}
-
-	virtual void Unbind() const
-	{
-		glUseProgram(0);
 	}
 
 	s32 GetUniformLocation(cstr name) const

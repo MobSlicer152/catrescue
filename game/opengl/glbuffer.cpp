@@ -5,7 +5,6 @@ void CGLBuffer::Upload(const void* data, ssize size) const
 {
     Bind();
     glBufferData(m_type, size, data, m_usage);
-    Unbind();
 }
 
 CGLVertexBuffer::CGLVertexBuffer(const Vertex_t* vertices, uint32_t vertexCount) : CGLBuffer(GL_STATIC_DRAW, GL_ARRAY_BUFFER)
@@ -42,6 +41,7 @@ CGLVertexArray::CGLVertexArray(const CGLVertexBuffer& vertexBuffer, const CGLInd
 	}
 
 	Bind();
+
 	vertexBuffer.Bind();
 	indexBuffer.Bind();
 
@@ -55,5 +55,5 @@ CGLVertexArray::CGLVertexArray(const CGLVertexBuffer& vertexBuffer, const CGLInd
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
 
-	Unbind();
+    Unbind();
 }

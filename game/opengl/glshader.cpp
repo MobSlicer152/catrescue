@@ -43,7 +43,7 @@ u32 CGLShaderProgram::Load(SDL_Storage* storage, cstr name, GLenum shaderType)
 	LogInfo("Loading shader %s", name);
 
 	u64 size = 0;
-	void* data = Read(storage, name, &size);
+	void* data = Read(storage, name, size);
 
 	u32 shader = glCreateShader(shaderType);
 	cstr sources[] = {(cstr)data};

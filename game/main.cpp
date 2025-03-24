@@ -10,6 +10,8 @@
 
 int SDL_main(int argc, char* argv[])
 {
+	LogAddFile(fopen("output.log", "ab+"), LogLevelDebug);
+
 	SDL_Storage* storage = OpenStorage();
 
 	flecs::world world(argc, argv);
@@ -19,44 +21,31 @@ int SDL_main(int argc, char* argv[])
 	InitializeGL();
 	ResizeGL(window->GetWidth(), window->GetHeight());
 
-	Vertex_t vertices[] = {
-		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-		{ {-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
-	};
-	Index_t indices[] = {
-		{0, 1, 2},
-        {0, 2, 3}
-	};
-
-	CGLVertexBuffer vbo(vertices, ARRAYSIZE(vertices));
-	CGLIndexBuffer ebo(indices, ARRAYSIZE(indices));
-	CGLVertexArray vao(vbo, ebo);
 	CGLShaderProgram shader(storage, "shaders/basic.vert", "shaders/basic.frag");
+	CGLTexture texture(storage, "textures/missing.qoi");
+	CGLMaterial material(&shader, &texture);
 
-	glm::mat4 model(1.0f);
-	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 projection = glm::perspective(glm::radians(90.0f), window->GetAspect(), 0.1f, 1000.0f);
-	glm::mat4 camera = projection * view;
+	CModel teapot(storage, "models/teapot.obj", &material);
+
+	glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 5.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 proj = glm::perspective(glm::radians(90.0f), window->GetAspect(), 0.1f, 1000.0f);
 
 	u64 now = 0;
 	u64 last = now;
 	while (window->IsOpen())
 	{
 		now = SDL_GetTicks();
+		f32 delta = (now - last) / 1000.0f;
 
 		window->Update();
 
 		ClearScreen();
 
-		shader.Bind();
-		vao.Bind();
-		shader.SetUniform("model", model);
-		shader.SetUniform("camera", camera);
-		glDrawElements(GL_TRIANGLES, ebo.GetIndexCount() * 3, GL_UNSIGNED_INT, (void*)(0));
+		model = glm::rotate(model, glm::radians(10.0f * delta), glm::vec3(0.0f, 1.0f, 0.0f));
+		teapot.Draw(model, view, proj);
 
-		world.progress((now - last) / 1000.0f);
+		world.progress(delta);
 
 		window->SwapBuffers();
 
