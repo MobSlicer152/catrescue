@@ -42,7 +42,7 @@ int SDL_main(int argc, char* argv[])
 
 		ClearScreen();
 
-		model = glm::rotate(model, glm::radians(10.0f * delta), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(30.0f * delta), glm::vec3(0.0f, 1.0f, 0.0f));
 		teapot.Draw(model, view, proj);
 
 		world.progress(delta);
