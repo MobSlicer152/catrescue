@@ -1,6 +1,6 @@
 #include "window.h"
 #include "log.h"
-#include "opengl/opengl.h"
+#include "render/opengl/opengl.h"
 #include "util.h"
 
 CWindow::CWindow(cstr title, u32 width, u32 height) : m_handle(nullptr), m_open(false), m_width(width), m_height(height)

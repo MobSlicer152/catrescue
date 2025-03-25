@@ -1,9 +1,10 @@
 #pragma once
 
 #include "game/game.h"
+#include "game/render/texture.h"
 #include "opengl.h"
 
-class CGLTexture: public CBaseGLObject
+class CGLTexture: public CBaseGLObject, public ITexture
 {
   public:
 	CGLTexture() : CBaseGLObject() {}
@@ -24,12 +25,12 @@ class CGLTexture: public CBaseGLObject
 		glBindTexture(GL_TEXTURE_2D, m_handle);
 	}
 
-	u32 GetWidth() const
+	virtual u32 GetWidth() const
 	{
 		return m_width;
 	}
 
-	u32 GetHeight() const
+	virtual u32 GetHeight() const
 	{
 		return m_height;
 	}

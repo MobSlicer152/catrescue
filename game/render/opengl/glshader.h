@@ -2,9 +2,10 @@
 
 #include "game/game.h"
 #include "game/log.h"
+#include "game/render/shader.h"
 #include "opengl.h"
 
-class CGLShaderProgram: public CBaseGLObject
+class CGLShaderProgram: public CBaseGLObject, public IShaderProgram
 {
   public:
 	CGLShaderProgram(SDL_Storage* storage, cstr vertexName, cstr fragmentName);
@@ -24,27 +25,27 @@ class CGLShaderProgram: public CBaseGLObject
 		glUseProgram(m_handle);
 	}
 
-	s32 GetUniformLocation(cstr name) const
+	virtual s32 GetUniformLocation(cstr name) const
 	{
 		return glGetUniformLocation(m_handle, name);
 	}
 
-	void SetUniform(cstr name, glm::vec2 value) const
+	virtual void SetUniform(cstr name, glm::vec2 value) const
 	{
 		glUniform2fv(GetUniformLocation(name), 1, (f32*)&value);
 	}
 
-	void SetUniform(cstr name, glm::vec3 value) const
+	virtual void SetUniform(cstr name, glm::vec3 value) const
 	{
 		glUniform3fv(GetUniformLocation(name), 1, (f32*)&value);
 	}
 
-	void SetUniform(cstr name, glm::vec4 value) const
+	virtual void SetUniform(cstr name, glm::vec4 value) const
 	{
 		glUniform4fv(GetUniformLocation(name), 1, (f32*)&value);
 	}
 
-	void SetUniform(cstr name, glm::mat4 value) const
+	virtual void SetUniform(cstr name, glm::mat4 value) const
 	{
 		glUniformMatrix4fv(GetUniformLocation(name), 1, false, (f32*)&value);
 	}
