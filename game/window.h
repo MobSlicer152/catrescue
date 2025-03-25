@@ -1,6 +1,8 @@
 #pragma once
 
-#include "game/game.h"
+#include "game.h"
+#include "render/device.h"
+
 
 class CWindow
 {
@@ -15,6 +17,8 @@ class CWindow
     {
         return m_open;
 	}
+
+	bool ClaimForDevice(const CRenderDevice& device) const;
 
 	u32 GetWidth() const
 	{

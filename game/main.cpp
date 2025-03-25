@@ -2,7 +2,6 @@
 
 #include "game.h"
 #include "log.h"
-#include "render/opengl/opengl.h"
 #include "util.h"
 #include "window.h"
 
@@ -16,8 +15,7 @@ int SDL_main(int argc, char* argv[])
 
 	CWindow* window = new CWindow();
 
-	InitializeGL();
-	ResizeGL(window->GetWidth(), window->GetHeight());
+	
 
 	u64 now = 0;
 	u64 last = now;
@@ -28,7 +26,6 @@ int SDL_main(int argc, char* argv[])
 
 		window->Update();
 
-		ClearScreen();
 		world.progress(delta);
 		window->SwapBuffers();
 
