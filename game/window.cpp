@@ -29,9 +29,14 @@ CWindow::~CWindow()
 	}
 }
 
-bool CWindow::ClaimForDevice(const CRenderDevice& device) const
+bool CWindow::ClaimForDevice(const CGPUDevice* device) const
 {
-	return SDL_ClaimWindowForGPUDevice(device.GetDevice(), m_handle);
+	return SDL_ClaimWindowForGPUDevice(device->GetHandle(), m_handle);
+}
+
+void CWindow::ReleaseForDevice(const CGPUDevice* device) const
+{
+	return SDL_ReleaseWindowFromGPUDevice(device->GetHandle(), m_handle);
 }
 
 void CWindow::Update()
@@ -52,9 +57,4 @@ void CWindow::Update()
 			break;
 		}
 	}
-}
-
-void CWindow::SwapBuffers()
-{
-	SDL_GL_SwapWindow(m_handle);
 }

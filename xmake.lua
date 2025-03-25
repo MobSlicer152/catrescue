@@ -21,7 +21,6 @@ end
 
 add_requires("assimp")
 add_requires("flecs")
-add_requires("glad")
 add_requires("glm")
 add_requires("joltphysics")
 add_requires("libsdl3")
@@ -38,6 +37,6 @@ target("catrescue")
 		end
 	end)
 
-	add_packages("assimp", "flecs", "glad", "glm", "joltphysics", "libsdl3", "qoi", "stb")
+	add_packages("assimp", "flecs", "glm", "joltphysics", "libsdl3", "qoi", "stb")
 target_end()
 

@@ -2,6 +2,8 @@
 
 #include "game.h"
 #include "log.h"
+#include "render/buffer.h"
+#include "render/device.h"
 #include "util.h"
 #include "window.h"
 
@@ -14,8 +16,8 @@ int SDL_main(int argc, char* argv[])
 	flecs::world world(argc, argv);
 
 	CWindow* window = new CWindow();
-
-	
+	CGPUDevice* device = new CGPUDevice(argc > 1 ? argv[1] : nullptr);
+	window->ClaimForDevice(device);
 
 	u64 now = 0;
 	u64 last = now;
@@ -27,11 +29,12 @@ int SDL_main(int argc, char* argv[])
 		window->Update();
 
 		world.progress(delta);
-		window->SwapBuffers();
 
 		last = now;
 	}
 
+	window->ReleaseForDevice(device);
+	delete device;
 	delete window;
 
 	return 0;

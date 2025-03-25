@@ -9,7 +9,7 @@
 #define RENDER_DEBUG 0
 #endif
 
-CRenderDevice::CRenderDevice(cstr driverName)
+CGPUDevice::CGPUDevice(cstr driverName)
 {
     LogInfo("Creating render device%s%s", driverName ? " with driver " : "", driverName ? driverName : "");
     m_handle = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL, RENDER_DEBUG, driverName);
@@ -20,10 +20,11 @@ CRenderDevice::CRenderDevice(cstr driverName)
     }
 }
 
-CRenderDevice::~CRenderDevice()
+CGPUDevice::~CGPUDevice()
 {
     if (IsGood())
     {
+        LogInfo("Destroying render device");
         SDL_DestroyGPUDevice(m_handle);
     }
 }

@@ -2,13 +2,13 @@
 
 #include "game/game.h"
 
-class CRenderDevice
+class CGPUDevice
 {
   public:
-    CRenderDevice(cstr driverName = nullptr);
-    ~CRenderDevice();
+    CGPUDevice(cstr driverName = nullptr);
+    ~CGPUDevice();
 
-    SDL_GPUDevice* GetDevice() const
+    SDL_GPUDevice* GetHandle() const
     {
         return m_handle;
     }

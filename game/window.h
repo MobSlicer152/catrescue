@@ -1,8 +1,8 @@
 #pragma once
 
 #include "game.h"
-#include "render/device.h"
 
+class CGPUDevice;
 
 class CWindow
 {
@@ -11,14 +11,14 @@ class CWindow
     ~CWindow();
 
     void Update();
-	void SwapBuffers();
 
     bool IsOpen() const
     {
         return m_open;
 	}
 
-	bool ClaimForDevice(const CRenderDevice& device) const;
+	bool ClaimForDevice(const CGPUDevice* device) const;
+	void ReleaseForDevice(const CGPUDevice* device) const;
 
 	u32 GetWidth() const
 	{

@@ -24,7 +24,7 @@
 
 #include "log.h"
 
-#ifdef _WIN32
+#ifdef SDL_PLATFORM_WIN32
 #include <windows.h>
 #endif
 
