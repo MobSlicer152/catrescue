@@ -2,6 +2,12 @@
 
 #include "game.h"
 
+enum VertexType_t
+{
+	StandardVertex, // Vertex_t
+	VertexTypeCount
+};
+
 struct Vertex_t
 {
 	glm::vec3 position;
