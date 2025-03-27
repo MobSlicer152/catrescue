@@ -13,8 +13,14 @@ class CGPUCommandBuffer: public CBaseGPUObject<SDL_GPUCommandBuffer>
 	~CGPUCommandBuffer()
     {
         // submitting a command buffer invalidates it
-        m_handle = nullptr;
+		if (IsGood())
+		{
+			Submit();
+		}
     }
 
 	std::shared_ptr<CGPUFence> Submit();
+
+	void PushVertexUniform();
+	void PushFragmentUniform();
 };

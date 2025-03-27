@@ -8,6 +8,6 @@ class CGPUCommandBuffer;
 class CGPUDevice: public CBaseGPUObject<SDL_GPUDevice, CGPUDevice>
 {
   public:
-    CGPUDevice(cstr driverName = nullptr);
-    ~CGPUDevice();
+	CGPUDevice(cstr driverName = nullptr);
+	~CGPUDevice();
 };

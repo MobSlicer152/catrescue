@@ -9,5 +9,7 @@ CGPUCommandBuffer::CGPUCommandBuffer(std::shared_ptr<CGPUDevice> device) : CBase
 
 std::shared_ptr<CGPUFence> CGPUCommandBuffer::Submit()
 {
-    return std::make_shared<CGPUFence>(m_parent, SDL_SubmitGPUCommandBufferAndAcquireFence(m_handle));
+    auto fence = std::make_shared<CGPUFence>(m_parent, SDL_SubmitGPUCommandBufferAndAcquireFence(m_handle));
+    m_handle = nullptr;
+    return fence;
 }
