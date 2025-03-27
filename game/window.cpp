@@ -1,8 +1,6 @@
 #include "window.h"
-#include "SDL3/SDL_gpu.h"
-#include "SDL3/SDL_video.h"
+#include "gpu/device.h"
 #include "log.h"
-#include "render/device.h"
 #include "util.h"
 
 CWindow::CWindow(cstr title, u32 width, u32 height) : m_handle(nullptr), m_open(false), m_width(width), m_height(height)

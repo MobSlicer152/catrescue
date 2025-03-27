@@ -1,12 +1,13 @@
 #include "SDL3/SDL_main.h"
 
 #include "game.h"
+#include "gpu/buffer.h"
+#include "gpu/commandbuffer.h"
+#include "gpu/device.h"
+#include "gpu/renderpass.h"
 #include "log.h"
-#include "render/buffer.h"
-#include "render/device.h"
 #include "util.h"
 #include "window.h"
-#include <memory>
 
 int SDL_main(int argc, char* argv[])
 {
@@ -29,8 +30,8 @@ int SDL_main(int argc, char* argv[])
 
 	Index_t indices[] = {
 		{0, 1, 2},
-		{0, 2, 3}
-	};
+        {0, 2, 3}
+    };
 
 	CGPUBuffer vertexBuffer(device, vertices, ARRAYSIZE(vertices));
 	CGPUBuffer indexBuffer(device, indices, ARRAYSIZE(indices));

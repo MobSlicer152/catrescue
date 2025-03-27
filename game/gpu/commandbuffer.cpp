@@ -2,7 +2,7 @@
 #include "device.h"
 #include "fence.h"
 
-CGPUCommandBuffer::CGPUCommandBuffer(std::shared_ptr<CGPUDevice> device) : CBaseGPUObject(device, nullptr)
+CGPUCommandBuffer::CGPUCommandBuffer(std::shared_ptr<CGPUDevice> device) : CBaseGPUObject(device)
 {
     m_handle = SDL_AcquireGPUCommandBuffer(m_parent->GetHandle());
 }

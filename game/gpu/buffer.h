@@ -37,6 +37,21 @@ class CGPUBuffer: public CBaseGPUObject<SDL_GPUBuffer>
 		return m_usage & SDL_GPU_BUFFERUSAGE_VERTEX;
 	}
 
+	u32 GetSize() const
+	{
+		return m_size;
+	}
+
+	u32 GetVertexCount() const
+	{
+		return m_size / sizeof(Vertex_t);
+	}
+
+	u32 GetIndexCount() const
+	{
+		return m_size / sizeof(Index_t);
+	}
+
 	SDL_GPUBufferUsageFlags GetUsage() const
 	{
 		return m_usage;
@@ -44,4 +59,5 @@ class CGPUBuffer: public CBaseGPUObject<SDL_GPUBuffer>
 
   private:
 	SDL_GPUBufferUsageFlags m_usage;
+	u32 m_size;
 };

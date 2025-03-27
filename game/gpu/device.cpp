@@ -10,7 +10,7 @@
 #define RENDER_DEBUG 0
 #endif
 
-CGPUDevice::CGPUDevice(cstr driverName) : CBaseGPUObject(nullptr, nullptr)
+CGPUDevice::CGPUDevice(cstr driverName) : CBaseGPUObject(nullptr)
 {
 	LogInfo("Creating render device%s%s", driverName ? " with driver " : "", driverName ? driverName : "");
 	m_handle = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL, RENDER_DEBUG, driverName);

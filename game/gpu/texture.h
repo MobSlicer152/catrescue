@@ -8,9 +8,11 @@ class CGPUDevice;
 class CGPUTexture: public CBaseGPUObject<SDL_GPUTexture>
 {
   public:
+	// pixels have to be either uint32 or float (for now)
 	CGPUTexture(
-		std::shared_ptr<CGPUDevice> device, u32* pixels, u32 width, u32 height, SDL_GPUTextureFormat format,
-		SDL_GPUTextureUsageFlags usage);
+		std::shared_ptr<CGPUDevice> device, SDL_GPUTextureFormat format,
+		SDL_GPUTextureUsageFlags usage, u32 width, u32 height, void* pixels = nullptr);
+	CGPUTexture(std::shared_ptr<CGPUDevice> device, SDL_Storage* storage, cstr path, SDL_GPUTextureUsageFlags usage);
 	~CGPUTexture();
 
 	u32 GetWidth() const
@@ -38,4 +40,7 @@ class CGPUTexture: public CBaseGPUObject<SDL_GPUTexture>
 	u32 m_height;
 	SDL_GPUTextureFormat m_format;
 	SDL_GPUTextureUsageFlags m_usage;
+
+	void Create();
+	void Upload(void* pixels);
 };

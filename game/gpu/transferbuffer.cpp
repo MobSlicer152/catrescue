@@ -3,7 +3,7 @@
 #include "game/log.h"
 
 CGPUTransferBuffer::CGPUTransferBuffer(std::shared_ptr<CGPUDevice> device, u32 size, SDL_GPUTransferBufferUsage usage)
-	: CBaseGPUObject(device, nullptr), m_usage(usage)
+	: CBaseGPUObject(device), m_usage(usage)
 {
     SDL_GPUTransferBufferCreateInfo info = {};
     info.size = size;

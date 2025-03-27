@@ -9,7 +9,7 @@ class CBaseGPUObject
 {
   public:
     CBaseGPUObject() = default;
-    CBaseGPUObject(std::shared_ptr<P> parent, H* handle) : m_parent(parent), m_handle(handle)
+    CBaseGPUObject(std::shared_ptr<P> parent, H* handle = nullptr) : m_parent(parent), m_handle(handle)
     {
     }
 
