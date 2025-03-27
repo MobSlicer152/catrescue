@@ -17,8 +17,8 @@ class CWindow
         return m_open;
 	}
 
-	bool ClaimForDevice(const CGPUDevice* device) const;
-	void ReleaseForDevice(const CGPUDevice* device) const;
+	bool ClaimForDevice(std::shared_ptr<CGPUDevice> device) const;
+	void ReleaseForDevice(std::shared_ptr<CGPUDevice> device) const;
 
 	u32 GetWidth() const
 	{

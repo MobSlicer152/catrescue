@@ -6,6 +6,7 @@
 #include "render/device.h"
 #include "util.h"
 #include "window.h"
+#include <memory>
 
 int SDL_main(int argc, char* argv[])
 {
@@ -15,9 +16,24 @@ int SDL_main(int argc, char* argv[])
 
 	flecs::world world(argc, argv);
 
-	CWindow* window = new CWindow();
-	CGPUDevice* device = new CGPUDevice(argc > 1 ? argv[1] : nullptr);
+	std::shared_ptr<CWindow> window = std::make_shared<CWindow>();
+	std::shared_ptr<CGPUDevice> device = std::make_shared<CGPUDevice>(argc > 1 ? argv[1] : nullptr);
 	window->ClaimForDevice(device);
+
+	Vertex_t vertices[] = {
+		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{ {-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
+	};
+
+	Index_t indices[] = {
+		{0, 1, 2},
+		{0, 2, 3}
+	};
+
+	CGPUBuffer vertexBuffer(device, vertices, ARRAYSIZE(vertices));
+	CGPUBuffer indexBuffer(device, indices, ARRAYSIZE(indices));
 
 	u64 now = 0;
 	u64 last = now;
@@ -34,8 +50,6 @@ int SDL_main(int argc, char* argv[])
 	}
 
 	window->ReleaseForDevice(device);
-	delete device;
-	delete window;
 
 	return 0;
 }

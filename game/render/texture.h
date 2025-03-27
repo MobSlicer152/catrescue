@@ -1,26 +1,17 @@
 #pragma once
 
 #include "game/game.h"
+#include "gpuobj.h"
 
 class CGPUDevice;
 
-class CGPUTexture
+class CGPUTexture: public CBaseGPUObject<SDL_GPUTexture>
 {
   public:
 	CGPUTexture(
-		const CGPUDevice* device, u32* pixels, u32 width, u32 height, SDL_GPUTextureFormat format,
+		std::shared_ptr<CGPUDevice> device, u32* pixels, u32 width, u32 height, SDL_GPUTextureFormat format,
 		SDL_GPUTextureUsageFlags usage);
 	~CGPUTexture();
-
-	SDL_GPUTexture* GetHandle() const
-	{
-		return m_handle;
-	}
-
-	bool IsGood() const
-	{
-		return m_handle != nullptr;
-	}
 
 	u32 GetWidth() const
 	{
@@ -43,8 +34,6 @@ class CGPUTexture
 	}
 
   private:
-	const CGPUDevice* m_device;
-	SDL_GPUTexture* m_handle;
 	u32 m_width;
 	u32 m_height;
 	SDL_GPUTextureFormat m_format;

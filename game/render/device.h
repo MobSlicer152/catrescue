@@ -1,23 +1,13 @@
 #pragma once
 
 #include "game/game.h"
+#include "gpuobj.h"
 
-class CGPUDevice
+class CGPUCommandBuffer;
+
+class CGPUDevice: public CBaseGPUObject<SDL_GPUDevice, CGPUDevice>
 {
   public:
     CGPUDevice(cstr driverName = nullptr);
     ~CGPUDevice();
-
-    SDL_GPUDevice* GetHandle() const
-    {
-        return m_handle;
-    }
-
-    bool IsGood() const
-    {
-        return m_handle != nullptr;
-    }
-
-  private:
-    SDL_GPUDevice* m_handle;
 };

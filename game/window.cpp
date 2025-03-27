@@ -1,5 +1,6 @@
 #include "window.h"
 #include "SDL3/SDL_gpu.h"
+#include "SDL3/SDL_video.h"
 #include "log.h"
 #include "render/device.h"
 #include "util.h"
@@ -29,12 +30,12 @@ CWindow::~CWindow()
 	}
 }
 
-bool CWindow::ClaimForDevice(const CGPUDevice* device) const
+bool CWindow::ClaimForDevice(std::shared_ptr<CGPUDevice> device) const
 {
 	return SDL_ClaimWindowForGPUDevice(device->GetHandle(), m_handle);
 }
 
-void CWindow::ReleaseForDevice(const CGPUDevice* device) const
+void CWindow::ReleaseForDevice(std::shared_ptr<CGPUDevice> device) const
 {
 	return SDL_ReleaseWindowFromGPUDevice(device->GetHandle(), m_handle);
 }
