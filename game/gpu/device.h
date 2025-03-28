@@ -4,10 +4,25 @@
 #include "gpuobj.h"
 
 class CGPUCommandBuffer;
+class CWindow;
 
-class CGPUDevice: public CBaseGPUObject<SDL_GPUDevice, CGPUDevice>
+class CGPUDevice: public CBaseGPUObject<SDL_GPUDevice, CWindow>
 {
   public:
-	CGPUDevice(cstr driverName = nullptr);
+	CGPUDevice(std::shared_ptr<CWindow> window, cstr driverName = nullptr);
 	~CGPUDevice();
+
+	SDL_GPUTextureFormat GetSwapChainFormat() const
+	{
+		return m_swapChainFormat;
+	}
+
+	SDL_GPUShaderFormat GetShaderFormat() const
+	{
+		return m_shaderFormat;
+	}
+
+  private:
+	SDL_GPUTextureFormat m_swapChainFormat;
+	SDL_GPUShaderFormat m_shaderFormat;
 };

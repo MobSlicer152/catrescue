@@ -33,7 +33,7 @@ target("catrescue")
 
 	after_build(function (target)
 		if not os.exists(path.join(target:targetdir(), "assets")) then
-			os.ln("$(scriptdir)/assets", path.join(target:targetdir(), "assets"))
+			os.ln("$(scriptdir)/assets/out", path.join(target:targetdir(), "assets"))
 		end
 	end)
 

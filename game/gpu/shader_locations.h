@@ -1,6 +1,4 @@
-// has to be valid glsl
-
-#pragma once
+// has to be valid hlsl
 
 #define STANDARD_VERTEX_POSITION 0
 #define STANDARD_VERTEX_NORMAL 1

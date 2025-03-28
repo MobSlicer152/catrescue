@@ -27,10 +27,17 @@ CGPUGraphicsPipeline::CGPUGraphicsPipeline(std::shared_ptr<CGPUDevice> device, c
 	SDL_GPUGraphicsPipelineCreateInfo sdlInfo = {};
 	sdlInfo.vertex_shader = createInfo.vertexShader.GetHandle();
 	sdlInfo.fragment_shader = createInfo.fragmentShader.GetHandle();
+    
 	sdlInfo.rasterizer_state = createInfo.rasterState;
 	sdlInfo.depth_stencil_state = createInfo.depthState;
 	sdlInfo.vertex_input_state = VERTEX_LAYOUTS[createInfo.vertexType];
 	sdlInfo.multisample_state.sample_count = createInfo.sampleCount;
+
+    sdlInfo.target_info.color_target_descriptions = createInfo.colorTargets;
+    sdlInfo.target_info.num_color_targets = createInfo.colorTargetCount;
+    sdlInfo.target_info.depth_stencil_format = createInfo.depthFormat;
+    sdlInfo.target_info.has_depth_stencil_target = createInfo.depthFormat != SDL_GPU_TEXTUREFORMAT_INVALID;
+
 	m_handle = SDL_CreateGPUGraphicsPipeline(m_parent->GetHandle(), &sdlInfo);
     if (!m_handle)
     {

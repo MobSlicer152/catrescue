@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 #include "assimp/cimport.h"
 #include "assimp/postprocess.h"

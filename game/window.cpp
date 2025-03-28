@@ -28,16 +28,6 @@ CWindow::~CWindow()
 	}
 }
 
-bool CWindow::ClaimForDevice(std::shared_ptr<CGPUDevice> device) const
-{
-	return SDL_ClaimWindowForGPUDevice(device->GetHandle(), m_handle);
-}
-
-void CWindow::ReleaseForDevice(std::shared_ptr<CGPUDevice> device) const
-{
-	return SDL_ReleaseWindowFromGPUDevice(device->GetHandle(), m_handle);
-}
-
 void CWindow::Update()
 {
 	SDL_Event event;
