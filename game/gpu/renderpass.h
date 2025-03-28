@@ -14,9 +14,9 @@ class CGPURenderPass: public CBaseGPUObject<SDL_GPURenderPass, CGPUCommandBuffer
   public:
 	CGPURenderPass(
 		std::shared_ptr<CGPUCommandBuffer> cmdBuf, const CGPUTexture* colorTargets, u32 colorTargetCount,
-		const CGPUTexture& depthTarget, glm::vec4 clearColor = {0, 0, 0, 0}, f32 clearDepth = 1.0f);
+		const CGPUTexture* depthTarget, glm::vec4 clearColor = {0, 0, 0, 0}, f32 clearDepth = 1.0f);
 	CGPURenderPass(
-		std::shared_ptr<CGPUCommandBuffer> cmdBuf, const CGPUTexture& colorTarget, const CGPUTexture& depthTarget,
+		std::shared_ptr<CGPUCommandBuffer> cmdBuf, const CGPUTexture& colorTarget, const CGPUTexture* depthTarget,
 		glm::vec4 clearColor = {0, 0, 0, 0}, f32 clearDepth = 1.0f)
 		: CGPURenderPass(cmdBuf, &colorTarget, 1, depthTarget, clearColor)
 	{

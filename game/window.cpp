@@ -30,6 +30,8 @@ CWindow::~CWindow()
 
 void CWindow::Update()
 {
+	m_resized = false;
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -39,6 +41,7 @@ void CWindow::Update()
 			LogInfo("Window resized from %ux%u to %ux%u", m_width, m_height, event.window.data1, event.window.data2);
 			m_width = event.window.data1;
 			m_height = event.window.data2;
+			m_resized = true;
 			break;
 		case SDL_EVENT_QUIT:
 			LogInfo("Quit requested");

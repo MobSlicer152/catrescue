@@ -13,3 +13,8 @@ std::shared_ptr<CGPUFence> CGPUCommandBuffer::Submit()
     m_handle = nullptr;
     return fence;
 }
+
+std::shared_ptr<CGPUTexture> CGPUCommandBuffer::GetSwapChainTexture(std::shared_ptr<CWindow> window)
+{
+	SDL_WaitAndAcquireGPUSwapchainTexture(SDL_GPUCommandBuffer *command_buffer, SDL_Window *window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height)
+}

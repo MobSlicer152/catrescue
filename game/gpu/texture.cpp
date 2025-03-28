@@ -32,7 +32,7 @@ CGPUTexture::CGPUTexture(std::shared_ptr<CGPUDevice> device, SDL_Storage* storag
 
 CGPUTexture::~CGPUTexture()
 {
-	if (IsGood())
+	if (m_owned && IsGood())
 	{
 		SDL_ReleaseGPUTexture(m_parent->GetHandle(), m_handle);
 		m_handle = nullptr;
@@ -41,6 +41,8 @@ CGPUTexture::~CGPUTexture()
 
 void CGPUTexture::Create()
 {
+	m_owned = true;
+
 	SDL_GPUTextureCreateInfo info = {};
 	info.width = m_width;
 	info.height = m_height;
@@ -58,7 +60,6 @@ void CGPUTexture::Create()
 
 void CGPUTexture::Upload(void* pixels)
 {
-	
 	auto cmdBuf = std::make_shared<CGPUCommandBuffer>(m_parent);
 
 	u32 size = m_width * m_height * 4;

@@ -5,6 +5,8 @@
 
 class CGPUDevice;
 class CGPUFence;
+class CGPUTexture;
+class CWindow;
 
 class CGPUCommandBuffer: public CBaseGPUObject<SDL_GPUCommandBuffer>
 {
@@ -20,6 +22,8 @@ class CGPUCommandBuffer: public CBaseGPUObject<SDL_GPUCommandBuffer>
     }
 
 	std::shared_ptr<CGPUFence> Submit();
+
+	std::shared_ptr<CGPUTexture> GetSwapChainTexture(std::shared_ptr<CWindow> window);
 
 	void PushVertexUniform();
 	void PushFragmentUniform();

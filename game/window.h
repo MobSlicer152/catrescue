@@ -17,6 +17,11 @@ class CWindow
         return m_open;
 	}
 
+	bool Resized() const
+	{
+		return m_resized;
+	}
+
 	SDL_Window* GetHandle() const
 	{
 		return m_handle;
@@ -43,4 +48,5 @@ class CWindow
     bool m_open;
     u32 m_width;
     u32 m_height;
+	bool m_resized;
 };

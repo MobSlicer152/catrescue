@@ -36,10 +36,15 @@ class CGPUTexture: public CBaseGPUObject<SDL_GPUTexture>
 	}
 
   private:
+	friend class CGPUCommandBuffer;
+
+	bool m_owned;
 	u32 m_width;
 	u32 m_height;
 	SDL_GPUTextureFormat m_format;
 	SDL_GPUTextureUsageFlags m_usage;
+
+	CGPUTexture(SDL_GPUTexture* handle);
 
 	void Create();
 	void Upload(void* pixels);

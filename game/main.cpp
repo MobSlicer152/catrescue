@@ -91,6 +91,18 @@ int SDL_main(int argc, char* argv[])
 	vertexShader.reset();
 	fragmentShader.reset();
 
+	SDL_GPUSamplerCreateInfo samplerInfo = {};
+	samplerInfo.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_REPEAT;
+	samplerInfo.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_REPEAT;
+	samplerInfo.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST;
+	samplerInfo.min_lod = 0.0f;
+	samplerInfo.max_lod = 1.0f;
+	samplerInfo.mag_filter = SDL_GPU_FILTER_NEAREST;
+	samplerInfo.min_filter = SDL_GPU_FILTER_NEAREST;
+	auto sampler = std::make_shared<CGPUSampler>(device, samplerInfo);
+	
+	auto texture = std::make_shared<CGPUTexture>(device, storage, "textures/missing.qoi", SDL_GPU_TEXTUREUSAGE_SAMPLER);
+
 	u64 now = 0;
 	u64 last = now;
 	while (window->IsOpen())
@@ -100,11 +112,17 @@ int SDL_main(int argc, char* argv[])
 
 		window->Update();
 
+		auto cmdBuf = std::make_shared<CGPUCommandBuffer>(device);
+		auto colorTarget = device->GetSwapChainTexture();
+		CGPURenderPass renderPass(cmdBuf, )
+
 		world.progress(delta);
 
 		last = now;
 	}
 
+	texture.reset();
+	sampler.reset();
 	pipeline.reset();
 	device.reset();
 	window.reset();
