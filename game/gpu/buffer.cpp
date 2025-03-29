@@ -7,7 +7,7 @@
 #include "transferbuffer.h"
 
 CGPUBuffer::CGPUBuffer(std::shared_ptr<CGPUDevice> device, SDL_GPUBufferUsageFlags usage, const void* data, u32 size)
-	: CBaseGPUObject(device), m_usage(usage)
+	: CBaseGPUObject(device), m_usage(usage), m_size(size)
 {
 	SDL_GPUBufferCreateInfo info = {};
 	info.usage = m_usage;

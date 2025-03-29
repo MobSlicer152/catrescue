@@ -4,6 +4,7 @@
 #include "gpuobj.h"
 
 class CGPUCommandBuffer;
+class CWindow;
 
 class CGPUDevice: public CBaseGPUObject<SDL_GPUDevice, CWindow>
 {

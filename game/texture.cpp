@@ -8,8 +8,6 @@
 
 u32* LoadImage(SDL_Storage* storage, cstr name, u32& width, u32& height, SDL_GPUTextureFormat& format)
 {
-    LogInfo("Loading image %s", name);
-
     u64 size = 0;
     void* raw = Read(storage, name, size);
     if (!raw)

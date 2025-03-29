@@ -3,6 +3,7 @@
 #ifndef __COMMON_INCLUDED__
 #define __COMMON_INCLUDED__
 
+#define HLSL
 #include "shader_locations.h"
 
 #ifdef SPIRV

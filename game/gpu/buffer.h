@@ -49,7 +49,7 @@ class CGPUBuffer: public CBaseGPUObject<SDL_GPUBuffer>
 
 	u32 GetIndexCount() const
 	{
-		return m_size / sizeof(Index_t);
+		return m_size / sizeof(Index_t) * 3;
 	}
 
 	SDL_GPUBufferUsageFlags GetUsage() const

@@ -23,7 +23,7 @@ add_requires("assimp")
 add_requires("flecs")
 add_requires("glm")
 add_requires("joltphysics")
-add_requires("libsdl3")
+add_requires("libsdl3", {debug = true, configs = {shared = true}})
 add_requires("qoi")
 add_requires("stb")
 

@@ -13,6 +13,7 @@ class CGPUTexture: public CBaseGPUObject<SDL_GPUTexture>
 		std::shared_ptr<CGPUDevice> device, SDL_GPUTextureFormat format,
 		SDL_GPUTextureUsageFlags usage, u32 width, u32 height, void* pixels = nullptr);
 	CGPUTexture(std::shared_ptr<CGPUDevice> device, SDL_Storage* storage, cstr path, SDL_GPUTextureUsageFlags usage);
+	CGPUTexture(SDL_GPUTexture* handle, u32 width, u32 height, SDL_GPUTextureFormat m_format);
 	~CGPUTexture();
 
 	u32 GetWidth() const
@@ -36,15 +37,11 @@ class CGPUTexture: public CBaseGPUObject<SDL_GPUTexture>
 	}
 
   private:
-	friend class CGPUCommandBuffer;
-
 	bool m_owned;
 	u32 m_width;
 	u32 m_height;
 	SDL_GPUTextureFormat m_format;
 	SDL_GPUTextureUsageFlags m_usage;
-
-	CGPUTexture(SDL_GPUTexture* handle);
 
 	void Create();
 	void Upload(void* pixels);

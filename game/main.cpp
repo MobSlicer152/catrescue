@@ -6,7 +6,9 @@
 #include "gpu/device.h"
 #include "gpu/pipeline.h"
 #include "gpu/renderpass.h"
+#include "gpu/sampler.h"
 #include "gpu/shader.h"
+#include "gpu/shader_locations.h"
 #include "gpu/texture.h"
 #include "log.h"
 #include "util.h"
@@ -24,10 +26,10 @@ int SDL_main(int argc, char* argv[])
 	auto device = std::make_shared<CGPUDevice>(window, argc > 1 ? argv[1] : nullptr);
 
 	Vertex_t vertices[] = {
-		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
 		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-		{ {-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
+		{ {-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 	};
 
 	Index_t indices[] = {
@@ -100,8 +102,24 @@ int SDL_main(int argc, char* argv[])
 	samplerInfo.mag_filter = SDL_GPU_FILTER_NEAREST;
 	samplerInfo.min_filter = SDL_GPU_FILTER_NEAREST;
 	auto sampler = std::make_shared<CGPUSampler>(device, samplerInfo);
-	
+
 	auto texture = std::make_shared<CGPUTexture>(device, storage, "textures/missing.qoi", SDL_GPU_TEXTUREUSAGE_SAMPLER);
+
+	struct
+	{
+		glm::mat4 view;
+		glm::mat4 projection;
+	} sceneUbo;
+
+	sceneUbo.view = glm::lookAt(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	sceneUbo.projection = glm::perspective(glm::radians(90.0f), window->GetAspect(), 0.1f, 1000.0f);
+
+	struct
+	{
+		glm::mat4 model;
+	} objectUbo;
+
+	objectUbo.model = glm::mat4(1.0f);
 
 	u64 now = 0;
 	u64 last = now;
@@ -111,10 +129,35 @@ int SDL_main(int argc, char* argv[])
 		f32 delta = (now - last) / 1000.0f;
 
 		window->Update();
+		if (window->Resized())
+		{
+			sceneUbo.projection = glm::perspective(glm::radians(90.0f), window->GetAspect(), 0.1f, 1000.0f);
+		}
+
+		//objectUbo.model = glm::rotate(objectUbo.model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		auto cmdBuf = std::make_shared<CGPUCommandBuffer>(device);
-		auto colorTarget = device->GetSwapChainTexture();
-		CGPURenderPass renderPass(cmdBuf, )
+		auto colorTarget = cmdBuf->GetSwapChainTexture(window);
+		if (colorTarget)
+		{
+			CGPURenderPass renderPass(cmdBuf, colorTarget, nullptr);
+
+			renderPass.BindVertexBuffer(vertexBuffer);
+			renderPass.BindIndexBuffer(indexBuffer);
+			
+			renderPass.BindFragmentSampler(texture, sampler);
+
+			cmdBuf->PushVertexUniform(SCENE_UBO_LOCATION, &sceneUbo, sizeof(sceneUbo));
+			cmdBuf->PushVertexUniform(OBJECT_UBO_LOCATION, &objectUbo, sizeof(objectUbo));
+			
+			renderPass.BindGraphicsPipeline(pipeline);
+
+			renderPass.DrawIndexed(indexBuffer->GetIndexCount());
+
+			renderPass.End();
+		}
+
+		cmdBuf->Submit();
 
 		world.progress(delta);
 

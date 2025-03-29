@@ -2,26 +2,29 @@
 
 #include "common.hlsli"
 
-cbuffer UBO : register(b0, space1)
+cbuffer UBO : register(SCENE_UBO_LOCATION, space1)
 {
+    float4x4 view;
     float4x4 projection;
 }
 
-cbuffer OBJECT_UBO : register(b1, space1)
+cbuffer OBJECT_UBO : register(OBJECT_UBO_LOCATION, space1)
 {
     float4x4 model;
 }
 
 struct VERTEX_INPUT
 {
-    float2 position : position;
+    float3 position : POSITION;
+    float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD;
     float4 colour : COLOR;
 };
 
 struct VERTEX_OUTPUT
 {
-    float4 position : SV_position;
+    float4 position : SV_POSITION;
+    float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD;
     float4 colour : COLOR;
 };
@@ -30,8 +33,9 @@ VERTEX_OUTPUT VertexMain(VERTEX_INPUT input)
 {
     VERTEX_OUTPUT output;
 
-    float4x4 MP = mul(projection, model);
-    output.position = mul(float4(input.position, 0.0, 1.0), MP);
+    float4x4 MVP = mul(projection, mul(view, model));
+    output.position = mul(float4(input.position, 1.0), MVP);
+    output.normal = input.normal;
     output.textureCoordinate = input.textureCoordinate;
     output.colour = input.colour;
 

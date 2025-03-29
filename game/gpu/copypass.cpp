@@ -1,6 +1,7 @@
 #include "buffer.h"
 #include "copypass.h"
 #include "commandbuffer.h"
+#include "texture.h"
 #include "transferbuffer.h"
 #include "game/log.h"
 
@@ -37,8 +38,10 @@ void CGPUCopyPass::UploadToTexture(
     srcInfo.pixels_per_row = size.x;
     srcInfo.rows_per_layer = size.y;
     SDL_GPUTextureRegion destRegion = {};
+	destRegion.texture = texture.GetHandle();
     destRegion.w = size.x;
     destRegion.h = size.y;
+	destRegion.d = 1;
     destRegion.x = destPos.x;
     destRegion.y = destPos.y;
     destRegion.mip_level = destMip;

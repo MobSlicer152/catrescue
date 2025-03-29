@@ -1,6 +1,9 @@
 #include "commandbuffer.h"
 #include "device.h"
 #include "fence.h"
+#include "texture.h"
+#include "game/log.h"
+#include "game/window.h"
 
 CGPUCommandBuffer::CGPUCommandBuffer(std::shared_ptr<CGPUDevice> device) : CBaseGPUObject(device)
 {
@@ -16,5 +19,30 @@ std::shared_ptr<CGPUFence> CGPUCommandBuffer::Submit()
 
 std::shared_ptr<CGPUTexture> CGPUCommandBuffer::GetSwapChainTexture(std::shared_ptr<CWindow> window)
 {
-	SDL_WaitAndAcquireGPUSwapchainTexture(SDL_GPUCommandBuffer *command_buffer, SDL_Window *window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height)
+	SDL_GPUTexture* texture;
+	u32 width = 0;
+	u32 height = 0;
+	if (!SDL_WaitAndAcquireGPUSwapchainTexture(m_handle, window->GetHandle(), &texture, &width, &height))
+	{
+		LogError("Failed to acquire swap chain texture: %s", SDL_GetError());
+		return nullptr;
+	}
+
+	// if the window is minimized, it succeeds but gives a null texture
+	if (texture)
+	{
+		return std::make_shared<CGPUTexture>(texture, width, height, m_parent->GetSwapChainFormat());
+	}
+
+	return nullptr;
+}
+
+void CGPUCommandBuffer::PushVertexUniform(u32 slot, const void* data, u32 size)
+{
+	SDL_PushGPUVertexUniformData(m_handle, slot, data, size);
+}
+
+void CGPUCommandBuffer::PushFragmentUniform(u32 slot, const void* data, u32 size)
+{
+	SDL_PushGPUFragmentUniformData(m_handle, slot, data, size);
 }

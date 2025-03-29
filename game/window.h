@@ -11,6 +11,7 @@ class CWindow
     ~CWindow();
 
     void Update();
+	void Present();
 
     bool IsOpen() const
     {

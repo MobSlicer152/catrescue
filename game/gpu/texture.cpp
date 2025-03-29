@@ -22,12 +22,17 @@ CGPUTexture::CGPUTexture(
 CGPUTexture::CGPUTexture(std::shared_ptr<CGPUDevice> device, SDL_Storage* storage, cstr path, SDL_GPUTextureUsageFlags usage)
 	: CBaseGPUObject(device), m_usage(usage)
 {
-	Create();
 	u32* pixels = LoadImage(storage, path, m_width, m_height, m_format);
+	Create();
 	if (pixels)
 	{
 		Upload(pixels);
 	}
+}
+
+CGPUTexture::CGPUTexture(SDL_GPUTexture* handle, u32 width, u32 height, SDL_GPUTextureFormat m_format)
+	: CBaseGPUObject(nullptr, handle), m_owned(false), m_width(width), m_height(height)
+{
 }
 
 CGPUTexture::~CGPUTexture()

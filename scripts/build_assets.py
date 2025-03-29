@@ -119,6 +119,10 @@ def main():
 
     shader_flags = [f"-I{os.path.join(root, dir)}" for dir in shader_includedirs]
 
+    for dir in ["textures"]:
+        if not os.path.exists(os.path.join(output_dir, dir)):
+            os.symlink(os.path.join(assets_dir, dir), os.path.join(output_dir, dir))
+
     for root, _, files in os.walk(os.path.join(assets_dir, "shaders")):
         for file in files:
             if file.endswith(".hlsl"):
@@ -168,14 +172,6 @@ def main():
                             f"{name}.{extension}.spv",
                         ),
                     )
-
-    if os.path.exists(os.path.join(assets_dir, "fonts")):
-        try:
-            shutil.copytree(
-                os.path.join(assets_dir, "fonts"), os.path.join(output_dir, "fonts")
-            )
-        except FileExistsError:
-            pass
 
 
 if __name__ == "__main__":

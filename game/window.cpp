@@ -50,3 +50,8 @@ void CWindow::Update()
 		}
 	}
 }
+
+void CWindow::Present()
+{
+	SDL_UpdateWindowSurface(m_handle);
+}

@@ -25,6 +25,6 @@ class CGPUCommandBuffer: public CBaseGPUObject<SDL_GPUCommandBuffer>
 
 	std::shared_ptr<CGPUTexture> GetSwapChainTexture(std::shared_ptr<CWindow> window);
 
-	void PushVertexUniform();
-	void PushFragmentUniform();
+	void PushVertexUniform(u32 slot, const void* data, u32 size);
+	void PushFragmentUniform(u32 slot, const void* data, u32 size);
 };
