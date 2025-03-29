@@ -21,7 +21,7 @@ CGPURenderPass::CGPURenderPass(
 
 		info.load_op = SDL_GPU_LOADOP_CLEAR;
 		info.clear_color.r = clearColor.r;
-		info.clear_color.b = clearColor.g;
+		info.clear_color.g = clearColor.g;
 		info.clear_color.b = clearColor.b;
 		info.clear_color.a = clearColor.a;
 	}

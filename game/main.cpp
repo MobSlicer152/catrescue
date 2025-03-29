@@ -26,9 +26,9 @@ int SDL_main(int argc, char* argv[])
 	auto device = std::make_shared<CGPUDevice>(window, argc > 1 ? argv[1] : nullptr);
 
 	Vertex_t vertices[] = {
-		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
+		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
+		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 		{ {-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 	};
 
@@ -140,7 +140,7 @@ int SDL_main(int argc, char* argv[])
 		auto colorTarget = cmdBuf->GetSwapChainTexture(window);
 		if (colorTarget)
 		{
-			CGPURenderPass renderPass(cmdBuf, colorTarget, nullptr);
+			CGPURenderPass renderPass(cmdBuf, colorTarget, nullptr, {0.2f, 0.2f, 0.2f, 0.2f});
 
 			renderPass.BindVertexBuffer(vertexBuffer);
 			renderPass.BindIndexBuffer(indexBuffer);

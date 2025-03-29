@@ -15,18 +15,18 @@ cbuffer OBJECT_UBO : register(OBJECT_UBO_LOCATION, space1)
 
 struct VERTEX_INPUT
 {
-    float3 position : POSITION;
-    float3 normal : NORMAL;
-    float2 textureCoordinate : TEXCOORD;
-    float4 colour : COLOR;
+    float3 position : TEXCOORD0;
+    float3 normal : TEXCOORD1;
+    float2 textureCoordinate : TEXCOORD2;
+    float4 colour : TEXCOORD3;
 };
 
 struct VERTEX_OUTPUT
 {
     float4 position : SV_POSITION;
-    float3 normal : NORMAL;
-    float2 textureCoordinate : TEXCOORD;
-    float4 colour : COLOR;
+    float3 normal : TEXCOORD0;
+    float2 textureCoordinate : TEXCOORD1;
+    float4 colour : TEXCOORD2;
 };
 
 VERTEX_OUTPUT VertexMain(VERTEX_INPUT input)
