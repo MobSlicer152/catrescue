@@ -13,6 +13,8 @@ cbuffer OBJECT_UBO : register(OBJECT_UBO_LOCATION, space1)
     float4x4 model;
 }
 
+// due to limitations of SDL GPU, everything without an SV prefix has to be TEXCOORD
+
 struct VERTEX_INPUT
 {
     float3 position : TEXCOORD0;
