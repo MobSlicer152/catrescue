@@ -31,7 +31,7 @@
             "program": "${workspaceFolder}/build/windows/x64/debug/catrescue.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}/build/windows/x64/debug",
             "environment": [],
             "console": "externalTerminal"
         }

@@ -11,6 +11,10 @@
 #include "gpu/shader_locations.h"
 #include "gpu/texture.h"
 #include "log.h"
+#include "render/material.h"
+#include "render/model.h"
+#include "render/scene.h"
+#include "render/texture.h"
 #include "util.h"
 #include "window.h"
 
@@ -25,37 +29,26 @@ int main(int argc, char* argv[])
 	auto window = std::make_shared<CWindow>();
 	auto device = std::make_shared<CGPUDevice>(window, argc > 1 ? argv[1] : nullptr);
 
-	Vertex_t vertices[] = {
+	Vertex vertices[] = {
 		{  {0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 		{ {0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 		{ {-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
 	};
 
-	Index_t indices[] = {
+	Index indices[] = {
 		{0, 1, 2},
         {0, 2, 3}
     };
-
-	auto vertexBuffer = std::make_shared<CGPUBuffer>(device, vertices, ARRAYSIZE(vertices));
-	auto indexBuffer = std::make_shared<CGPUBuffer>(device, indices, ARRAYSIZE(indices));
 
 	auto vertexShader = std::make_shared<CGPUShader>(device, storage, "main", SDL_GPU_SHADERSTAGE_VERTEX);
 	auto fragmentShader = std::make_shared<CGPUShader>(device, storage, "main", SDL_GPU_SHADERSTAGE_FRAGMENT);
 
 	SDL_GPUColorTargetDescription colorTarget = {
 		device->GetSwapChainFormat(),
-		{
-			SDL_GPU_BLENDFACTOR_SRC_COLOR,
-			SDL_GPU_BLENDFACTOR_DST_COLOR,
-			SDL_GPU_BLENDOP_ADD,
-			SDL_GPU_BLENDFACTOR_SRC_ALPHA,
-			SDL_GPU_BLENDFACTOR_DST_ALPHA,
-			SDL_GPU_BLENDOP_ADD,
-			SDL_GPU_COLORCOMPONENT_R | SDL_GPU_COLORCOMPONENT_G | SDL_GPU_COLORCOMPONENT_B | SDL_GPU_COLORCOMPONENT_A,
-			true,
-			true
-		},
+		{SDL_GPU_BLENDFACTOR_SRC_COLOR, SDL_GPU_BLENDFACTOR_DST_COLOR, SDL_GPU_BLENDOP_ADD, SDL_GPU_BLENDFACTOR_SRC_ALPHA,
+								SDL_GPU_BLENDFACTOR_DST_ALPHA, SDL_GPU_BLENDOP_ADD,
+								SDL_GPU_COLORCOMPONENT_R | SDL_GPU_COLORCOMPONENT_G | SDL_GPU_COLORCOMPONENT_B | SDL_GPU_COLORCOMPONENT_A, true, true},
 	};
 
 	GPUGraphicsPipelineCreateInfo_t pipelineInfo = {
@@ -65,30 +58,18 @@ int main(int argc, char* argv[])
 		SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
 		SDL_GPU_SAMPLECOUNT_1,
 		{
-			SDL_GPU_FILLMODE_FILL,
-			SDL_GPU_CULLMODE_BACK,
-			SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
-		},
+          SDL_GPU_FILLMODE_FILL, SDL_GPU_CULLMODE_BACK,
+          SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE, },
 		{
-			SDL_GPU_COMPAREOP_LESS,
-			{
-				SDL_GPU_STENCILOP_KEEP,
-				SDL_GPU_STENCILOP_KEEP
-			},
-			{
-				SDL_GPU_STENCILOP_KEEP,
-				SDL_GPU_STENCILOP_KEEP
-			},
-			0x00,
-			0x00,
-			true,
-			true,
-			false,
-		},
+          SDL_GPU_COMPAREOP_LESS, {SDL_GPU_STENCILOP_KEEP, SDL_GPU_STENCILOP_KEEP},
+          {SDL_GPU_STENCILOP_KEEP, SDL_GPU_STENCILOP_KEEP},
+          0x00, 0x00,
+          true, true,
+          false, },
 		&colorTarget,
 		1,
 		SDL_GPU_TEXTUREFORMAT_INVALID
-	};
+    };
 	auto pipeline = std::make_shared<CGPUGraphicsPipeline>(device, pipelineInfo);
 	vertexShader.reset();
 	fragmentShader.reset();
@@ -105,19 +86,17 @@ int main(int argc, char* argv[])
 
 	auto texture = std::make_shared<CGPUTexture>(device, storage, "textures/missing.qoi", SDL_GPU_TEXTUREUSAGE_SAMPLER);
 
-	struct
-	{
-		glm::mat4 view;
-		glm::mat4 projection;
-	} sceneUbo;
+	auto ownedTexture = std::make_shared<CTexture>(sampler, texture);
+	auto material = std::make_shared<CMaterial>(pipeline, ownedTexture);
+
+	auto model = std::make_shared<CModel>(device, vertices, ARRAYSIZE(vertices), indices, ARRAYSIZE(indices), material);
+
+	SceneUBO sceneUbo = {};
 
 	sceneUbo.view = glm::lookAt(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	sceneUbo.projection = glm::perspective(glm::radians(90.0f), window->GetAspect(), 0.1f, 1000.0f);
 
-	struct
-	{
-		glm::mat4 model;
-	} objectUbo;
+	ObjectUBO objectUbo = {};
 
 	objectUbo.model = glm::mat4(1.0f);
 
@@ -134,26 +113,14 @@ int main(int argc, char* argv[])
 			sceneUbo.projection = glm::perspective(glm::radians(90.0f), window->GetAspect(), 0.1f, 1000.0f);
 		}
 
-		//objectUbo.model = glm::rotate(objectUbo.model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		// objectUbo.model = glm::rotate(objectUbo.model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		auto cmdBuf = std::make_shared<CGPUCommandBuffer>(device);
 		auto colorTarget = cmdBuf->GetSwapChainTexture(window);
 		if (colorTarget)
 		{
 			CGPURenderPass renderPass(cmdBuf, colorTarget, nullptr, {0.2f, 0.2f, 0.2f, 0.2f});
-
-			renderPass.BindVertexBuffer(vertexBuffer);
-			renderPass.BindIndexBuffer(indexBuffer);
-			
-			renderPass.BindFragmentSampler(texture, sampler);
-
-			cmdBuf->PushVertexUniform(SCENE_UBO_LOCATION, &sceneUbo, sizeof(sceneUbo));
-			cmdBuf->PushVertexUniform(OBJECT_UBO_LOCATION, &objectUbo, sizeof(objectUbo));
-			
-			renderPass.BindGraphicsPipeline(pipeline);
-
-			renderPass.DrawIndexed(indexBuffer->GetIndexCount());
-
+            model->Draw(renderPass, objectUbo, sceneUbo);
 			renderPass.End();
 		}
 
@@ -163,12 +130,6 @@ int main(int argc, char* argv[])
 
 		last = now;
 	}
-
-	texture.reset();
-	sampler.reset();
-	pipeline.reset();
-	device.reset();
-	window.reset();
 
 	return 0;
 }

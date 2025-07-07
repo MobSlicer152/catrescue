@@ -13,6 +13,11 @@ class CBaseGPUObject
     {
     }
 
+    std::shared_ptr<P> GetParent() const
+    {
+        return m_parent;
+    }
+
     H* GetHandle() const
     {
         return m_handle;

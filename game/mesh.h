@@ -2,13 +2,13 @@
 
 #include "game.h"
 
-enum VertexType_t
+enum VertexType
 {
 	StandardVertex, // Vertex_t
 	VertexTypeCount
 };
 
-struct Vertex_t
+struct Vertex
 {
 	glm::vec3 position;
 	glm::vec3 normal;
@@ -16,4 +16,4 @@ struct Vertex_t
 	glm::vec4 color;
 };
 
-typedef glm::ivec3 Index_t;
+typedef glm::ivec3 Index;

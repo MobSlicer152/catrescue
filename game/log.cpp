@@ -105,10 +105,10 @@ Return Value:
 
     vsnprintf(Message, sizeof(Message), Event->Format, Event->ArgList);
     if (Event->HexLine)
-        snprintf(All, sizeof(All), "%s %-5s %s:0x" PRIX64 ": %s\n", Time, LogGetLevelString(Event->Level), Event->File,
+        snprintf(All, sizeof(All), "%s %-5s %s:0x%" PRIX64 ": %s\n", Time, LogGetLevelString(Event->Level), Event->File,
                  (uint64_t)Event->Line, Message);
     else
-        snprintf(All, sizeof(All), "%s %-5s %s:" PRId64 ": %s\n", Time, LogGetLevelString(Event->Level), Event->File,
+        snprintf(All, sizeof(All), "%s %-5s %s:%" PRId64 ": %s\n", Time, LogGetLevelString(Event->Level), Event->File,
                  (int64_t)Event->Line, Message);
 
     OutputDebugStringA(All);

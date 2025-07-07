@@ -31,6 +31,8 @@ target("catrescue")
 	add_headerfiles("game/**.h", "assets/shaders/**")
 	add_files("game/**.cpp")
 
+    add_includedirs("game")
+
 	after_build(function (target)
 		if not os.exists(path.join(target:targetdir(), "assets")) then
 			os.ln("$(scriptdir)/assets/out", path.join(target:targetdir(), "assets"))

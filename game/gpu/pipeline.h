@@ -11,7 +11,7 @@ struct GPUGraphicsPipelineCreateInfo_t
 {
 	const CGPUShader& vertexShader;
 	const CGPUShader& fragmentShader;
-	VertexType_t vertexType;
+	VertexType vertexType;
 	SDL_GPUPrimitiveType primitiveType;
 	SDL_GPUSampleCount sampleCount;
     SDL_GPURasterizerState rasterState;

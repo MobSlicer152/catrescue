@@ -11,17 +11,17 @@ class CGPUBuffer: public CBaseGPUObject<SDL_GPUBuffer>
   public:
 	CGPUBuffer(std::shared_ptr<CGPUDevice> device, SDL_GPUBufferUsageFlags usage, const void* data, u32 size);
 
-	CGPUBuffer(std::shared_ptr<CGPUDevice> device, const Vertex_t* vertices, u32 vertexCount)
+	CGPUBuffer(std::shared_ptr<CGPUDevice> device, const Vertex* vertices, u32 vertexCount)
 		: CGPUBuffer(
 			  device, SDL_GPU_BUFFERUSAGE_VERTEX | SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ, vertices,
-			  vertexCount * sizeof(Vertex_t))
+			  vertexCount * sizeof(Vertex))
 	{
 	}
 
-	CGPUBuffer(std::shared_ptr<CGPUDevice> device, const Index_t* indices, u32 indexCount)
+	CGPUBuffer(std::shared_ptr<CGPUDevice> device, const Index* indices, u32 indexCount)
 		: CGPUBuffer(
 			  device, SDL_GPU_BUFFERUSAGE_INDEX | SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ, indices,
-			  indexCount * sizeof(Index_t))
+			  indexCount * sizeof(Index))
 	{
 	}
 
@@ -44,12 +44,12 @@ class CGPUBuffer: public CBaseGPUObject<SDL_GPUBuffer>
 
 	u32 GetVertexCount() const
 	{
-		return m_size / sizeof(Vertex_t);
+		return m_size / sizeof(Vertex);
 	}
 
 	u32 GetIndexCount() const
 	{
-		return m_size / sizeof(Index_t) * 3;
+		return m_size / sizeof(Index) * 3;
 	}
 
 	SDL_GPUBufferUsageFlags GetUsage() const
