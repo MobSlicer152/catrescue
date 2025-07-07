@@ -14,7 +14,7 @@
 #include "util.h"
 #include "window.h"
 
-int SDL_main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	LogAddFile(fopen("output.log", "ab+"), LogLevelDebug);
 

@@ -80,7 +80,10 @@ def main():
         if rebuild or (newer and dest_exists) or not dest_exists:
             command = function(src, dest)
             print(f"{command} (newer: {newer}, dest_exists: {dest_exists})")
-            os.chmod(command[0], 755)
+            try:
+                os.chmod(command[0], 755)
+            except:
+                pass
             process = Popen(
                 command,
                 stdout=PIPE,
@@ -112,10 +115,16 @@ def main():
         return shutil.which(name)
 
     dxc = find_tool("dxc")
+    if dxc is None:
+        print("Couldn't find dxc")
+        exit(1)
 
     if purge:
         print(f"Purging {output_dir}")
         shutil.rmtree(output_dir)
+
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
     shader_flags = [f"-I{os.path.join(root, dir)}" for dir in shader_includedirs]
 

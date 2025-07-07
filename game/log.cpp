@@ -62,15 +62,15 @@ static void StdoutCallback(LOG_EVENT *Event)
     fprintf(file, "\r%s \x1b[0m %s%-5s\x1b[0m \x1b[90m%s:", Buffer, LevelColours[Event->Level],
             LevelStrings[Event->Level], Event->File);
     if (Event->HexLine)
-        fprintf(file, "0x%llX:\x1b[0m ", (uint64_t)Event->Line);
+        fprintf(file, "0x%" PRIX64 ":\x1b[0m ", (uint64_t)Event->Line);
     else
-        fprintf(file, "%lld:\x1b[0m ", (int64_t)Event->Line);
+        fprintf(file, "%" PRId64 ":\x1b[0m ", (int64_t)Event->Line);
 #else
     fprintf(file, "%s %s %-5s %s:", Buffer, AsCurrentThread->Name, LevelStrings[Event->Level], Event->File);
     if (Event->HexLine)
-        fprintf(file, "0x%llX: ", (uint64_t)Event->Line);
+        fprintf(file, "0x%" PRIX64 ": ", (uint64_t)Event->Line);
     else
-        fprintf(file, "%lld: ", (int64_t)Event->Line);
+        fprintf(file, "%" PRId64 ": ", (int64_t)Event->Line);
 #endif
     vfprintf(file, Event->Format, Event->ArgList);
     fprintf(file, "\n");
@@ -105,10 +105,10 @@ Return Value:
 
     vsnprintf(Message, sizeof(Message), Event->Format, Event->ArgList);
     if (Event->HexLine)
-        snprintf(All, sizeof(All), "%s %-5s %s:0x%llX: %s\n", Time, LogGetLevelString(Event->Level), Event->File,
+        snprintf(All, sizeof(All), "%s %-5s %s:0x" PRIX64 ": %s\n", Time, LogGetLevelString(Event->Level), Event->File,
                  (uint64_t)Event->Line, Message);
     else
-        snprintf(All, sizeof(All), "%s %-5s %s:%lld: %s\n", Time, LogGetLevelString(Event->Level), Event->File,
+        snprintf(All, sizeof(All), "%s %-5s %s:" PRId64 ": %s\n", Time, LogGetLevelString(Event->Level), Event->File,
                  (int64_t)Event->Line, Message);
 
     OutputDebugStringA(All);
@@ -122,9 +122,9 @@ static void FileCallback(LOG_EVENT *Event)
     Buffer[strftime(Buffer, sizeof(Buffer), "%Y-%m-%d %H:%M:%S", Event->Time)] = '\0';
     fprintf(file, "%s %-5s %s:", Buffer, LevelStrings[Event->Level], Event->File);
     if (Event->HexLine)
-        fprintf(file, "0x%llX: ", (uint64_t)Event->Line);
+        fprintf(file, "0x%" PRIX64 ": ", (uint64_t)Event->Line);
     else
-        fprintf(file, "%lld: ", (int64_t)Event->Line);
+        fprintf(file, "%" PRId64 ": ", (int64_t)Event->Line);
     vfprintf(file, Event->Format, Event->ArgList);
     fprintf(file, "\n");
     fflush(file);

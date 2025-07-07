@@ -65,6 +65,9 @@ dstr FormatVa(cstr message, va_list args)
         return 0;
     }
 
+    va_end(copiedArgs);
+    va_copy(copiedArgs, args);
+
     dstr buffer = new char[size];
     if (!buffer)
     {

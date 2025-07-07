@@ -45,7 +45,6 @@ class CWindow
 
   private:
     SDL_Window* m_handle;
-	SDL_GLContext m_context;
     bool m_open;
     u32 m_width;
     u32 m_height;
