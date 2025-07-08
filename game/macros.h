@@ -55,3 +55,9 @@
 
 /// Mark a variable as unused
 #define UNUSED(x) ((void)(x))
+
+#ifdef _MSC_VER
+#define FORCEINLINE __forceinline
+#else
+#define FORCEINLINE __attribute__((always_inline)) inline
+#endif

@@ -48,6 +48,7 @@ class CGPURenderPass: public CBaseGPUObject<SDL_GPURenderPass, CGPUCommandBuffer
 		BindFragmentSamplers({texture}, {sampler}, firstSlot);
 	}
 
+	void BindGraphicsPipeline(const CGPUGraphicsPipeline& pipeline);
 	void BindGraphicsPipeline(const std::shared_ptr<CGPUGraphicsPipeline> pipeline);
 
 	void DrawIndexed(u32 indexCount, u32 instanceCount = 1);

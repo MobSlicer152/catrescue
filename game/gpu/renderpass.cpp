@@ -82,9 +82,14 @@ void CGPURenderPass::BindFragmentSamplers(
 	SDL_BindGPUFragmentSamplers(m_handle, firstSlot, bindings.data(), (u32)bindings.size());
 }
 
+void CGPURenderPass::BindGraphicsPipeline(const CGPUGraphicsPipeline& pipeline)
+{
+	SDL_BindGPUGraphicsPipeline(m_handle, pipeline.GetHandle());
+}
+
 void CGPURenderPass::BindGraphicsPipeline(const std::shared_ptr<CGPUGraphicsPipeline> pipeline)
 {
-	SDL_BindGPUGraphicsPipeline(m_handle, pipeline->GetHandle());
+    BindGraphicsPipeline(*pipeline);
 }
 
 void CGPURenderPass::DrawIndexed(u32 indexCount, u32 instanceCount)

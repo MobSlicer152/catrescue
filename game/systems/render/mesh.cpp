@@ -1,15 +1,47 @@
 #include "game.h"
-#include "mesh.h"
+#include "log.h"
+#include "util.h"
 
 #include "gpu/commandbuffer.h"
 #include "gpu/renderpass.h"
 #include "gpu/shader_locations.h"
 
-#include "material.h"
+#include "mesh.h"
 #include "scene.h"
-#include "model.h"
 
-void CModel::ProcessNode(const aiNode* node, const aiScene* scene, std::vector<const aiMesh*>& meshes)
+CMesh::CMesh(std::shared_ptr<CGPUDevice> device, SDL_Storage* storage, cstr name)
+{
+	LogInfo("Loading model %s", name);
+
+	u64 size = 0;
+	dstr data = (dstr)Read(storage, name, size);
+	if (!data)
+	{
+		LogError("Failed to read mesh %s: %s", name, SDL_GetError());
+		return;
+	}
+
+	// this code is all from purpl engine's mesh tool
+	// TODO: move this offline like in purpl
+
+	const aiScene* scene = aiImportFileFromMemory(
+		data, (u32)size,
+		aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_OptimizeMeshes | aiProcess_ConvertToLeftHanded, nullptr);
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		LogError("Failed to parse mesh %s: %s", name, aiGetErrorString());
+		return;
+	}
+
+	std::vector<const aiMesh*> meshes;
+	ProcessNode(scene->mRootNode, scene, meshes);
+
+	std::vector<Vertex> vertices;
+	std::vector<Index> indices;
+	ConvertMesh(scene, meshes[0], vertices, indices);
+}
+
+void CMesh::ProcessNode(const aiNode* node, const aiScene* scene, std::vector<const aiMesh*>& meshes)
 {
 	std::vector<u32> nodeMeshes(node->mMeshes, node->mMeshes + node->mNumMeshes);
 	meshes.reserve(meshes.capacity() + nodeMeshes.size());
@@ -24,7 +56,7 @@ void CModel::ProcessNode(const aiNode* node, const aiScene* scene, std::vector<c
 	}
 }
 
-void CModel::ConvertMesh(const aiScene* scene, const aiMesh* mesh, std::vector<Vertex>& vertices, std::vector<Index>& indices)
+void CMesh::ConvertMesh(const aiScene* scene, const aiMesh* mesh, std::vector<Vertex>& vertices, std::vector<Index>& indices)
 {
 	vertices.resize(mesh->mNumVertices);
 	for (u32 i = 0; i < mesh->mNumVertices; i++)
@@ -56,18 +88,4 @@ void CModel::ConvertMesh(const aiScene* scene, const aiMesh* mesh, std::vector<V
 		indices[i][1] = mesh->mFaces[i].mIndices[1];
 		indices[i][2] = mesh->mFaces[i].mIndices[2];
 	}
-}
-
-void CModel::Draw(CGPURenderPass& renderPass, const ObjectUBO& objectUbo, const SceneUBO& sceneUbo)
-{
-    auto cmdBuf = renderPass.GetParent();
-
-	renderPass.BindVertexBuffer(m_vertexBuffer);
-	renderPass.BindIndexBuffer(m_indexBuffer);
-
-	cmdBuf->PushVertexUniform(SCENE_UBO_LOCATION, &sceneUbo, sizeof(SceneUBO));
-	cmdBuf->PushVertexUniform(OBJECT_UBO_LOCATION, &objectUbo, sizeof(ObjectUBO));
-	m_material->Bind(renderPass);
-
-	renderPass.DrawIndexed(m_indexBuffer->GetIndexCount());
 }
